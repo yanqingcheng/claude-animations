@@ -1,0 +1,67 @@
+<div class="checker" aria-hidden="true"></div>
+<main class="page">
+  <header class="mast">
+    <p class="kicker">&#9733;&middot;.&middot;&acute;&macr;`&middot;.&middot;&#9733; a flash cartoon, minus the flash &#9733;&middot;.&middot;&acute;&macr;`&middot;.&middot;&#9733;</p>
+    <h1>The Rawr Song</h1>
+    <p class="ticker"><span>&#9733; welcome 2 my page &#9733; turn ur speakers on &#9733; best viewed at 800x600 &#9733; no badgers were harmed &#9733; u can poke the dinosaur &#9733; pls sign my guestbook (jk there is no guestbook) &#9733; do NOT pick up the phone &#9733;</span></p>
+  </header>
+
+  <section class="player" aria-label="The cartoon">
+    <div class="stage" id="stage">
+      <canvas id="cv" width="550" height="400" role="img" aria-label="A cartoon: a small green dinosaur on a hill sings the word rawr, which means I love you. Other animals join in, then everyone signs off and the dinosaur waits for you to answer."></canvas>
+      <div class="load" id="load">
+        <div class="bar" role="progressbar" aria-label="Loading the cartoon" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><i id="barfill"></i></div>
+        <p class="loadmsg" id="loadmsg">loading&hellip; 0%</p>
+      </div>
+      <button class="play" id="play" type="button" hidden>&#9654; Play</button>
+      <ul class="menu" id="menu" role="menu" aria-label="Movie menu" hidden>
+        <li role="menuitem" aria-disabled="true" class="off">Zoom In</li>
+        <li role="menuitemcheckbox" tabindex="-1" data-act="quality" id="m-qual">Quality: High</li>
+        <li role="separator"></li>
+        <li role="menuitemcheckbox" tabindex="-1" data-act="play" id="m-play" aria-checked="true">Play</li>
+        <li role="menuitemcheckbox" aria-checked="true" aria-disabled="true" class="off">Loop</li>
+        <li role="menuitem" tabindex="-1" data-act="rewind">Rewind</li>
+        <li role="separator"></li>
+        <li role="menuitem" aria-disabled="true" class="off">Settings&hellip;</li>
+        <li role="menuitem" tabindex="-1" data-act="about">About Definitely Not Flash Player 9&hellip;</li>
+      </ul>
+      <form class="chat" id="chat" hidden autocomplete="off">
+        <label for="msg">to <b>xX_RaWrSaUrUs_Xx</b>:</label>
+        <input id="msg" name="msg" type="text" value="rawr" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your message to the dinosaur">
+        <button id="send" type="submit">Send</button>
+      </form>
+    </div>
+    <div class="controls">
+      <button id="pause" type="button" disabled>pause</button>
+      <button id="replay" type="button" disabled>replay</button>
+      <button id="mute" type="button" aria-pressed="false">sound: on</button>
+      <button id="quality" type="button" aria-pressed="false">quality: high</button>
+      <p class="counter">rawrs returned <b id="count">000000</b></p>
+    </div>
+    <p class="note" id="note" aria-live="polite"></p>
+  </section>
+
+  <section class="book" aria-labelledby="bookh">
+    <h2 id="bookh">Dinosaur&ndash;English phrasebook</h2>
+    <p>For when someone says something 2 u and u aren&rsquo;t sure what they meant.</p>
+    <dl>
+      <dt>rawr</dt><dd><b>i love you.</b> The only word a dinosaur knows. It turns out to be enough.</dd>
+      <dt>quack</dt><dd><b>lol.</b> Also &ldquo;k.&rdquo; Also &ldquo;jk!! ily2 :P&rdquo;. Ducks are complicated.</dd>
+      <dt>moo</dt><dd><b>brb.</b> Do not wait up.</dd>
+      <dt>hoo</dt><dd><b>o rly?</b> Usual replies: &ldquo;ya rly.&rdquo; and &ldquo;NO WAI!!&rdquo;</dd>
+      <dt>bzz</dt><dd><b>*nudge*</b> Shakes the whole window. Soz.</dd>
+      <dt>&hellip;</dt><dd><b>is typing.</b> Keith has been typing since 2007.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    <ul class="badges" aria-label="Site badges">
+      <li>best viewed<br>800&times;600</li>
+      <li>made with &hearts;<br>not flash</li>
+      <li>sound: ON</li>
+      <li>0% badgers</li>
+      <li>&#9733; keith was<br>here &#9733;</li>
+    </ul>
+    <p>Sung by S.A.M., a talking program from 1982 that has been taught to hold a tune. Every other sound is made from scratch in your browser when the page loads. Nothing was sampled.</p>
+  </footer>
+</main>

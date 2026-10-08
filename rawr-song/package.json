@@ -1,0 +1,16 @@
+{
+  "name": "rawr-song",
+  "private": true,
+  "description": "The Rawr Song: a 2006-style cartoon loop, and the script that films it",
+  "scripts": {
+    "build": "node build.js",
+    "record": "node record.js"
+  },
+  "devDependencies": {
+    "@fontsource/comic-neue": "^5.3.0",
+    "@fontsource/luckiest-guy": "^5.3.0",
+    "@fontsource/silkscreen": "^5.3.0",
+    "playwright": "^1.56.0",
+    "sam-js": "0.3.1"
+  }
+}
