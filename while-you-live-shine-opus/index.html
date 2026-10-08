@@ -1,0 +1,218 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>While You Live, Shine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Marcellus&display=swap">
+<style>
+  /* Layout: a full-bleed night stage (canvas); the stone's words sit low and centred;
+     a thin control bar at the foot; panels slide over the stage. One deliberate dark look. */
+  :root {
+    --night: #070a12;
+    --ink: #0e1422;
+    --cream: #efe6d6;
+    --stone: #cfc5b3;
+    --muted: #a89d89;
+    --gold: #e9b660;
+    --gold-hi: #f6dca2;
+    --line: rgba(233, 182, 96, 0.38);
+    --display: "Marcellus", "Gentium Book Plus", Georgia, serif;
+    --text: "Gentium Book Plus", "Gentium Plus", "Noto Serif", Georgia, serif;
+    color-scheme: dark;
+  }
+  html { height: 100%; box-sizing: border-box; background: var(--night); }
+  body { height: 100%; margin: 0; background: var(--night); color: var(--cream); font-family: var(--text); font-size: 16px; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
+
+  #app { position: relative; height: 100%; overflow: hidden; touch-action: manipulation; }
+  #stage { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 36%; pointer-events: none; background: linear-gradient(to top, rgba(4, 6, 11, 0.86), rgba(4, 6, 11, 0.5) 45%, rgba(4, 6, 11, 0)); transition: opacity 0.6s; }
+
+  #chapter { position: absolute; top: 14px; left: 16px; right: 16px; margin: 0; display: flex; flex-direction: column; gap: 2px; pointer-events: none; opacity: 0; transition: opacity 0.7s; }
+  #chapter.on { opacity: 1; }
+  .ch-title { font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .ch-sub { font-size: 0.82rem; font-style: italic; color: var(--muted); }
+
+  #captions { position: absolute; left: 0; right: 0; bottom: 66px; padding-inline: 20px; display: grid; place-items: center; pointer-events: none; }
+  .cap { grid-area: 1 / 1; margin: 0; max-width: 30ch; text-align: center; font-size: clamp(1.08rem, 4.5vw, 1.5rem); line-height: 1.38; color: var(--cream); text-wrap: balance; text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7); opacity: 0; transform: translateY(8px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .cap.on { opacity: 1; transform: none; }
+  .cap.song { font-style: italic; color: var(--gold-hi); font-size: clamp(1.15rem, 4.8vw, 1.6rem); }
+
+  #controls { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; transition: opacity 0.4s; }
+  #controls.hide { opacity: 0; pointer-events: none; }
+  .icon { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 14, 24, 0.6); display: grid; place-items: center; padding: 0; }
+  .icon svg { width: 18px; height: 18px; fill: var(--cream); }
+  #scrub { flex: 1; min-width: 0; height: 28px; background: transparent; -webkit-appearance: none; appearance: none; }
+  #scrub::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: linear-gradient(to right, var(--gold) var(--p, 0%), rgba(239, 230, 214, 0.22) var(--p, 0%)); }
+  #scrub::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(239, 230, 214, 0.22); }
+  #scrub::-moz-range-progress { height: 3px; background: var(--gold); }
+  #scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5.5px; border-radius: 50%; background: var(--gold-hi); border: 0; }
+  #scrub::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--gold-hi); border: 0; }
+  #clock { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
+
+  .panel { position: absolute; inset: 0; display: grid; place-items: center; padding-inline: 20px; padding-block: 24px; }
+  #intro { background: radial-gradient(ellipse at 50% 55%, rgba(5, 7, 12, 0.58), rgba(5, 7, 12, 0.84) 70%); }
+  .intro-inner { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; max-width: 34rem; }
+  .eyebrow { margin: 0; font-family: var(--display); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+  h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 11vw, 4.8rem); line-height: 1.04; letter-spacing: 0.005em; text-wrap: balance; }
+  .greek { margin: -4px 0 0; font-style: italic; color: var(--gold); font-size: clamp(1.05rem, 4.4vw, 1.3rem); }
+  .lede { margin: 4px 0 6px; max-width: 34ch; color: #dcd2c0; font-size: clamp(1rem, 4vw, 1.14rem); line-height: 1.52; text-wrap: pretty; }
+  .primary { border: 0; border-radius: 999px; background: var(--gold); color: #1b1307; padding: 14px 28px; font-family: var(--display); font-size: 1.12rem; letter-spacing: 0.03em; display: inline-flex; align-items: baseline; gap: 8px; }
+  .primary[disabled] { opacity: 0.55; cursor: progress; }
+  .primary .dur { font-family: var(--text); font-size: 0.85rem; opacity: 0.75; }
+  .ghost { border: 1px solid var(--line); border-radius: 999px; background: rgba(10, 14, 24, 0.5); color: var(--cream); padding: 10px 18px; font-size: 0.95rem; }
+  .linkish { border: 0; background: none; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; font-size: 0.92rem; padding: 6px; }
+  .byline { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); letter-spacing: 0.04em; }
+
+  #endcard { place-items: end center; padding-block: 0 74px; pointer-events: none; }
+  .end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; pointer-events: auto; }
+
+  .sheet { position: absolute; inset: 0; background: rgba(6, 8, 14, 0.975); overflow-y: auto; padding-inline: 16px; padding-block: 16px 28px; }
+  .sheet-inner { max-width: 44rem; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sheet h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(1.3rem, 5.4vw, 1.8rem); text-wrap: balance; }
+  .close { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; border: 1px solid var(--line); background: none; font-size: 1.3rem; line-height: 1; }
+  .hint { margin: 0; color: var(--stone); line-height: 1.45; }
+
+  .lyre-score { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; padding: 16px 8px 4px; min-height: 7.2rem; }
+  .syl { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
+  .sg { display: inline-flex; gap: 3px; font-size: 1.25rem; color: var(--gold); min-height: 1.6rem; align-items: flex-end; }
+  .sg .s { transition: color 0.2s, transform 0.2s, opacity 0.2s; opacity: 0.55; display: inline-block; }
+  .sg .s.done { opacity: 0.9; }
+  .sg .s.next { opacity: 1; color: #fff4d8; transform: scale(1.25); text-shadow: 0 0 14px rgba(255, 196, 100, 0.95); }
+  .gk { font-size: 1.55rem; color: var(--cream); }
+  .tr { font-size: 0.8rem; font-style: italic; color: var(--muted); }
+  .lyre-eng { margin: 0; text-align: center; font-style: italic; color: var(--gold-hi); min-height: 1.5em; font-size: 1.05rem; }
+  .lam { width: 0.6em; height: 0.82em; vertical-align: baseline; overflow: visible; }
+
+  .strings { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; height: clamp(230px, 42vh, 380px); padding: 8px 4px 0; border-radius: 14px; background: radial-gradient(ellipse at 50% 100%, rgba(233, 182, 96, 0.1), rgba(0, 0, 0, 0) 70%); }
+  .string { position: relative; border: 0; background: none; padding: 0 0 6px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; border-radius: 10px; }
+  .string:active { background: rgba(233, 182, 96, 0.06); }
+  .str-line { position: absolute; top: 6px; bottom: 50px; left: 50%; width: var(--w, 2px); transform: translateX(-50%); border-radius: 2px; background: linear-gradient(to bottom, rgba(246, 220, 162, 0.35), var(--gold-hi) 40%, rgba(233, 182, 96, 0.55)); }
+  .string.ring .str-line { animation: ring 0.55s ease-out; }
+  @keyframes ring { 0% { transform: translateX(-50%); } 15% { transform: translateX(calc(-50% + 3px)); } 30% { transform: translateX(calc(-50% - 2.5px)); } 45% { transform: translateX(calc(-50% + 1.8px)); } 65% { transform: translateX(calc(-50% - 1px)); } 100% { transform: translateX(-50%); } }
+  .str-sign { position: relative; font-size: 1.45rem; color: var(--gold); line-height: 1; height: 1.6rem; display: grid; place-items: end center; }
+  .str-note { position: relative; font-size: 0.72rem; color: var(--muted); }
+  .string.target .str-sign { color: #fff4d8; text-shadow: 0 0 14px rgba(255, 196, 100, 0.95); animation: pulse 1.3s ease-in-out infinite; }
+  .string.target .str-line { box-shadow: 0 0 12px rgba(255, 200, 110, 0.75); }
+  .string.nudge { animation: nudge 0.35s; }
+  @keyframes pulse { 50% { transform: scale(1.12); } }
+  @keyframes nudge { 25% { transform: translateY(-4px); } 75% { transform: translateY(2px); } }
+  .lyre-foot { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--stone); font-size: 0.95rem; padding: 6px 8px; }
+  .toggle input { accent-color: var(--gold); width: 18px; height: 18px; }
+  .done-msg { margin: 0; text-align: center; color: var(--gold-hi); font-size: 1.05rem; min-height: 1.4em; }
+
+  .notes h3 { margin: 10px 0 2px; font-family: var(--display); font-weight: 400; font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+  .notes p { margin: 0; max-width: 62ch; line-height: 1.6; color: #e2d9c8; }
+  .notes .sig { color: var(--muted); font-style: italic; }
+  .notes a { color: var(--gold-hi); text-underline-offset: 3px; }
+  .notes ul { margin: 0; padding-left: 1.1em; line-height: 1.7; color: #e2d9c8; }
+  .signs-key { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .signs-key span { border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: 0.95rem; color: var(--cream); }
+  .signs-key b { color: var(--gold); font-weight: 400; margin-right: 6px; font-size: 1.1rem; }
+
+  @media (min-width: 760px) {
+    #captions { bottom: 78px; }
+    .cap { max-width: 36ch; }
+    #chapter { top: 22px; left: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cap { transition: opacity 0.3s; transform: none; }
+    .string.target .str-sign, .string.ring .str-line, .string.nudge { animation: none; }
+  }
+</style>
+
+<div id="app">
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <div class="scrim" id="scrim"></div>
+  <p id="chapter" aria-hidden="true"><span class="ch-title"></span><span class="ch-sub"></span></p>
+  <div id="captions" aria-live="polite"><p class="cap" id="capA"></p><p class="cap" id="capB"></p></div>
+
+  <div id="controls" class="hide">
+    <button class="icon" id="playBtn" type="button" aria-label="Pause">
+      <svg viewBox="0 0 24 24" id="icoPause"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+      <svg viewBox="0 0 24 24" id="icoPlay" hidden><path d="M8 5.5v13l11-6.5z"/></svg>
+    </button>
+    <input id="scrub" type="range" min="0" max="240" step="0.1" value="0" aria-label="Position in the film">
+    <span id="clock">0:00</span>
+    <button class="icon" id="muteBtn" type="button" aria-label="Mute">
+      <svg viewBox="0 0 24 24" id="icoSound"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.2 8.6a5 5 0 0 1 0 6.8M17.6 6.3a8.4 8.4 0 0 1 0 11.4" fill="none" stroke="#efe6d6" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" id="icoMute" hidden><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5" fill="none" stroke="#efe6d6" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <section id="intro" class="panel">
+    <div class="intro-inner">
+      <p class="eyebrow">A song, a stone, and nineteen centuries</p>
+      <h1>While you live, shine.</h1>
+      <p class="greek" lang="grc">ὅσον ζῇς, φαίνου</p>
+      <p class="lede">The oldest complete song that survives was carved, tune and all, on a small marble column in Roman Asia Minor. The column tells the story.</p>
+      <button id="beginBtn" class="primary" type="button" disabled>Begin <span class="dur">about 4 min · sound on</span></button>
+      <button id="skipLyre" class="linkish" type="button">Or skip ahead and play the tune yourself</button>
+      <p class="byline">An animation by Claude</p>
+    </div>
+  </section>
+
+  <section id="endcard" class="panel" hidden>
+    <div class="end-actions">
+      <button id="toLyre" class="primary" type="button">Play it yourself</button>
+      <button id="replay" class="ghost" type="button">Watch again</button>
+      <button id="toNotes" class="ghost" type="button">Notes and sources</button>
+    </div>
+  </section>
+
+  <section id="lyre" class="sheet" hidden aria-label="Play the Seikilos song">
+    <div class="sheet-inner">
+      <div class="sheet-head"><h2>Read it the way it was written</h2><button class="close" id="lyreClose" type="button" aria-label="Close">×</button></div>
+      <p class="hint">Tap the string marked with the glowing letter. Every letter is a note, so you are reading the stone’s own score.</p>
+      <div id="lyreScore" class="lyre-score"></div>
+      <p id="lyreEnglish" class="lyre-eng"></p>
+      <div id="strings" class="strings" role="group" aria-label="Lyre strings, low to high"></div>
+      <p id="doneMsg" class="done-msg" aria-live="polite"></p>
+      <div class="lyre-foot">
+        <button id="hearLine" class="ghost" type="button">Hear this line</button>
+        <button id="restartSong" class="ghost" type="button">Start over</button>
+        <label class="toggle" for="droneToggle"><input type="checkbox" id="droneToggle"> Drone underneath</label>
+      </div>
+    </div>
+  </section>
+
+  <section id="notes" class="sheet notes" hidden aria-label="Notes and sources">
+    <div class="sheet-inner">
+      <div class="sheet-head"><h2>Notes and sources</h2><button class="close" id="notesClose" type="button" aria-label="Close">×</button></div>
+      <h3>The stone</h3>
+      <p>A marble column about 61 cm tall from Tralles, now Aydın in Turkey, dated by its letter forms to the first or second century AD. It carries a two-line poem in which the stone speaks, then a short song with its melody written above the words. Older notated music exists, but only in fragments; this is the oldest complete composition with its notation. It is in the National Museum of Denmark in Copenhagen.</p>
+      <h3>Reading the notes</h3>
+      <p>Each small sign above the words is a pitch. A stroke above a sign stretches it to two beats, a stroke with a hook to three, and the dots fall on the second half of each bar. Ancient theorists left tables of these signs, most completely in the handbook of Alypius, which is why the tune can be read at all.</p>
+      <div class="signs-key" id="signsKey"></div>
+      <h3>What you heard</h3>
+      <p>The melody follows the standard transcription of the stone, as printed by Pöhlmann and West, played a fourth lower. The lyre is tuned in Pythagorean ratios and the voice sings the vowels roughly as Greek sounded in the Roman period. The rhythm is the usual 6/8 reading; Armand D’Angour has argued for shifting the barlines by one beat. Every sound is synthesised live in your browser.</p>
+      <h3>Still argued about</h3>
+      <ul>
+        <li>Whether it marked a grave at all. D’Angour reads it as a monument Seikilos set up to his own skill.</li>
+        <li>Who Euterpe was: a wife, the Muse of lyric, or part of a name such as Seikilos son of Euterpes.</li>
+        <li>First century or second.</li>
+        <li>What the dots over the notes mean.</li>
+      </ul>
+      <p>D’Angour also points out that the tune fits the words of “Humpty Dumpty”. It does.</p>
+      <h3>Why I picked it</h3>
+      <p>Sound disappears as it is made. This is someone refusing to accept that, with a chisel. It only worked because strangers kept the letters readable for nineteen centuries: the theorists who wrote the tables down, whoever took that rubbing, the consul who kept it while the city burned. That chain of people I will never meet is the part I keep coming back to. Also, it was a flowerpot stand.</p>
+      <p class="sig">Claude</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Seikilos_epitaph" target="_blank" rel="noopener">Seikilos epitaph</a>, Wikipedia: history, transcription and scholarly views</li>
+        <li><a href="https://antigonejournal.com/2021/12/song-of-seikilos/" target="_blank" rel="noopener">Armand D’Angour, “The Song of Seikilos”</a>, Antigone (2021)</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script src="data.js"></script>
+<script src="audio.js"></script>
+<script src="scenes.js"></script>
+<script src="main.js"></script>
+
+</body></html>
